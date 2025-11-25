@@ -36,6 +36,9 @@ def webServer(port=13331):
       #This variable can store the headers you want to send for any valid or invalid request.   What header should be sent for a response that is ok?    
       #Fill in start
       statusLine = b"HTTP/1.1 200 OK\r\n"
+      outputdata = b"Content-Type: text/html; charset=UTF-8\r\n"
+      serverHeader = b"Server: MyWebServer\r\n"
+      connectionHeader = b"Connection: close\r\n"
               
       #Content-Type is an example on how to send a header as bytes. There are more!
       outputdata = b"Content-Type: text/html; charset=UTF-8\r\n"
@@ -43,7 +46,7 @@ def webServer(port=13331):
 
       #Note that a complete header must end with a blank line, creating the four-byte sequence "\r\n\r\n" Refer to https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html
       
-      headers = statusLine + outputdata + b"\r\n"
+      headers = statusLine + outputdata + serverHeader + connectionHeader + b"\r\n"
 
       #Fill in end
                
@@ -69,17 +72,18 @@ def webServer(port=13331):
       #Fill in start
       statusLine = b"HTTP/1.1 404 Not Found\r\n"
       outputdata = b"Content-Type: text/html; charset=UTF-8\r\n"
-      headers = statusLine + outputdata + b"\r\n"
-      body = b"<html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1><p>The requested file was not found on this server.</p></body></html>"
-      connectionSocket.sendall(headers + body)
-
+      serverHeader = b"Server: MyWebServer\r\n"
+      connectionHeader = b"Connection: close\r\n"
+      headers = statusLine + outputdata + serverHeader + connectionHeader + b"\r\n"
+      body = b"<html><body><h1>404 Not Found</h1></body></html>"
+      connectionSocket.send(headers + body)
 
       #Fill in end
 
 
       #Close client socket
       #Fill in start
-
+      connectionSocket.close()
       #Fill in end
 
   # Commenting out the below (some use it for local testing). It is not required for Gradescope, and some students have moved it erroneously in the While loop. 
